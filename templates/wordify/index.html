@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="wrap">
+    <section class="site-section pt-5 pb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="owl-carousel owl-theme home-slider">
+                        {% for list in lists %}
+                        <div>
+                            <a href="{% url 'article:detail' list.id%}" class="a-block d-flex align-items-center height-lg"
+                               style="background-image: url({{list.image.url}}); ">
+                                <div class="text half-to-full">
+                                    <span class="category mb-5">{{list.category}}</span>
+                                    <div class="post-meta">
+                                        {% if list.author.avatar %}
+                                        <span class="author mr-2"><img src="{{list.author.avatar.url}}" alt="Colorlib">{% if list.author.user.first_name %}{{list.author.user.first_name}}{% else %}{{list.author.user}}{%endif%}</span>&bullet;
+                                        {% else %}
+                                        <span class="author mr-2"><img src="{% static 'images/user.png' %}" alt="Colorlib">{% if list.author.user.first_name %}{{list.author.user.first_name}}{% else %}{{list.author.user}}{%endif%}</span>&bullet;
+                                        {% endif %}
+                                        <span class="mr-2">{{list.created_date|date}}</span> &bullet;
+                                        <span class="ml-2"><span class="fa fa-comments"></span>{{list.comment_set.count}}</span>
+                                    </div>
+                                    <h3>{{list.title|safe|slice:30}}</h3>
+                                    <p>{{list.content|safe|slice:60}}</p>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="site-section py-sm">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="mb-4">Latest Posts</h2>
+                </div>
+            </div>
+            <div class="row blog-entries">
+                <div class="col-md-12 col-lg-8 main-content">
+                    <div class="row">
+                        {% for object in object_list %}
+                        <div class="col-md-6">
+                            <a href="{% url 'article:detail' object.id%}" class="blog-entry element-animate" data-animate-effect="fadeIn">
+                                <img src="{{object.image.url}}" alt="Image placeholder">
+                                <div class="blog-content-body">
+                                    <div class="post-meta">
+                                        {% if object.author.avatar %}
+                                        <span class="author mr-2"><img src="{{object.author.avatar.url}}" alt="Colorlib">{% if object.author.user.first_name %}{{object.author.user.first_name}}{% else %}{{object.author.user}}{%endif%}</span>&bullet;
+                                        {% else %}
+                                        <span class="author mr-2"><img src="{% static 'images/user.png' %}" alt="Colorlib">{% if object.author.user.first_name %}{{object.author.user.first_name}}{% else %}{{object.author.user}}{%endif%}</span>&bullet;
+                                        {% endif %}
+                                        <span class="mr-2">{{object.created_date}}</span> &bullet;
+                                        <span class="ml-2"><span class="fa fa-comments"></span>{{object.comment_set.count}}</span>
+                                    </div>
+                                    <h2>{{object.title|safe|slice:60}}</h2>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% include 'paginator.html' %}
+                </div>
+
+                <div class="col-md-12 col-lg-4 sidebar">
+                    <div class="sidebar-box search-form-wrap">
+                        <form action="#" class="search-form">
+                            <div class="form-group">
+                                <span class="icon fa fa-search"></span>
+                                <input type="search" name="q" class="form-control" id="s"
+                                       placeholder="Type a keyword and hit enter">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="sidebar-box">
+                        <h3 class="heading">Popular Posts</h3>
+                        <div class="post-entry-sidebar">
+                            <ul>
+                                {% for list in lists %}
+                                <li>
+                                    <a href="#">
+                                        <img src="{{list.image.url}}" alt="Image placeholder" class="mr-4">
+                                        <div class="text">
+                                            <h4>{{list.title|safe|slice:20}}</h4>
+                                            <div class="post-meta">
+                                                <span class="mr-2">{{list.created_date|date:"Y d, F"}}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Categories</h3>
+                        <ul class="categories">
+                            {% for category in categories %}
+                            <li><a href="?category={{category.title}}">{{category.title}}<span>{{category.count}}</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-box">
+                        <h3 class="heading">Tags</h3>
+                        <ul class="tags">
+                            {% for tag in tags %}
+                            <li><a href="?tag={{tag.title}}">{{tag.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
